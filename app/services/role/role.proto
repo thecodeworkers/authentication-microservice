@@ -1,0 +1,49 @@
+syntax = "proto2";
+
+message RoleEmpty {}
+
+message RoleIdRequest {
+  required string id = 1;
+}
+
+message RoleNotIdRequest {
+  required string name = 1;
+  required string code = 2;
+}
+
+message RoleRequest {
+  required string id = 1;
+  required string name = 2;
+  required string code = 3;
+}
+
+message RoleTableRequest {
+  required int32 page = 1;
+  optional int32 per_page = 2 [default = 15];
+  optional string search = 3;
+}
+
+message RoleResponse {
+  required RoleRequest role = 1;
+}
+
+message RoleMultipleResponse {
+  repeated RoleRequest role = 1;
+}
+
+message RoleTableResponse {
+  repeated RoleRequest items = 1;
+  required int32 page = 2;
+  required int32 per_page = 3;
+  required int32 total_items = 4;
+  required int32 num_pages = 5;
+}
+
+service Role {
+  rpc table (RoleTableRequest) returns (RoleTableResponse);
+  rpc get_all (RoleEmpty) returns (RoleMultipleResponse);
+  rpc get (RoleIdRequest) returns (RoleResponse);
+  rpc save (RoleNotIdRequest) returns (RoleResponse);
+  rpc update (RoleRequest) returns (RoleResponse);
+  rpc delete (RoleIdRequest) returns (RoleResponse);
+}

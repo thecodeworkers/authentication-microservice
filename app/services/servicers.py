@@ -1,7 +1,7 @@
-
+from .role import start_role_service
 
 def start_all_servicers():
-    pass
+    start_role_service()
 
 def start_all_emiters():
     pass
