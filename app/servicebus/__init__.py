@@ -6,9 +6,12 @@ import json
 
 class ServiceBus():
     def __init__(self):
+        self.__channel = None
+        self.__queues = []
+
+    def init_connection(self):
         self.__connection = BlockingConnection(ConnectionParameters(host=SERVICEBUS_HOST))
         self.__channel = self.__connection.channel()
-        self.__queues = []
 
     def add_queue(self, queue_name, emitter):
         event_object = {
@@ -36,7 +39,10 @@ class ServiceBus():
         self.__start_multiple_channel()
 
     def status(self):
-        return len(self.__channel.consumer_tags)
+        if self.__channel:
+            return len(self.__channel.consumer_tags)
+
+        return 0
 
     def start(self):
         self.__channel.start_consuming()
