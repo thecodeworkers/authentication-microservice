@@ -12,3 +12,7 @@
 3) Generar los archivos pb2 y pb2_grpc con python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. name.proto, se recomienda colocar estos archivos en la carpeta app/protos, tambien se recomienda, pero es opcional, importar todo en el archivo __init__ de esta misma carpeta.
 4) Al momento de crear el archivo .py luego de crear la clase, se debe crear una funcion, que no este al mismo nivel que la clase, osea que este por fuera de la misma. Esta funcion debe usar el metodo add to server proveido por grpc para inicializar la clase en el servidor levantado para ese microservicio. Es importante considerar que deben usarse los archivo pb2 y pb2_grpc para poder usar los metodos dentro de la clase.
 5) Importar la funcion que se menciono anteriormente en el archivo servicers y ejecutar la misma dentro de la funcion start_all_servicers 
+
+# PASOS PARA VALIDAR LA AUTENTICACION
+
+1) 
