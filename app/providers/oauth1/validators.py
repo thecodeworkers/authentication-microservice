@@ -1,4 +1,5 @@
 from oauthlib.oauth1 import RequestValidator
+from oauthlib.common import safe_string_equals
 from ...models import Clients, RequestTokens
 from ...utils import generate_salt, update_or_create
 
@@ -11,7 +12,7 @@ class Oauth1RequestValidator(RequestValidator):
 
     def validate_client_key(self, client_key, request):
         try:
-            self.__get_current_client(client_key)
+            self.__get_current_client(Clients, {'client_key': client_key})
             return True
 
         except Clients.DoesNotExist as error:
@@ -22,7 +23,7 @@ class Oauth1RequestValidator(RequestValidator):
 
     def validate_redirect_uri(self, client_key, redirect_uri, request):
         try:
-            client = self.__get_current_client(client_key)
+            client = self.__get_current_client(Clients, {'client_key': client_key})
 
             if client.redirect_uri in redirect_uri:
                 return True
@@ -33,7 +34,7 @@ class Oauth1RequestValidator(RequestValidator):
     
     def get_client_secret(self, client_key, request):
         try:
-            client = self.__get_current_client(client_key)
+            client = self.__get_current_client(Clients, {'client_key': client_key})
             return client.client_secret
 
         except Clients.DoesNotExist as error:
@@ -41,7 +42,7 @@ class Oauth1RequestValidator(RequestValidator):
 
     def save_request_token(self, token, request):
         try:
-            client = self.__get_current_client(request.client_key)
+            client = self.__get_current_client(Clients, {'client_key': request.client_key})
 
             client_object = {
                 'client': client.id
@@ -50,7 +51,7 @@ class Oauth1RequestValidator(RequestValidator):
             request_token_object = {
                 'request_token': token['oauth_token'],
                 'request_token_secret': token['oauth_token_secret'],
-                'verifier': generate_salt(10),
+                'verifier': generate_salt(),
                 **client_object
             }
 
@@ -59,6 +60,41 @@ class Oauth1RequestValidator(RequestValidator):
         except Clients.DoesNotExist as error:
             raise Exception('Client not found') from None
 
+    def validate_request_token(self, client_key, token, request):
+        try:
+            request_token = self.__get_current_client(RequestTokens, {'request_token': token})
+            
+            if request_token.client.client_key == client_key:
+                return True
 
-    def __get_current_client(self, key):
-        return Clients.objects.get(client_key=key)
+            raise Exception('Client not found') from None
+
+        except RequestTokens.DoesNotExist as error:
+            raise Exception('Client not found') from None
+
+    def validate_verifier(self, client_key, token, verifier, request):
+        request_token = self.__get_current_client(RequestTokens, {'request_token': token})
+
+        if safe_string_equals(verifier, request_token.verifier):
+            if request_token.client.client_key == client_key:
+                return True
+
+        return False
+
+    def get_request_token_secret(self, client_key, token, request):
+        try:
+            request_token = self.__get_current_client(RequestTokens, {'request_token': token})
+            
+            if request_token.client.client_key == client_key:
+                return request_token.request_token_secret
+
+            raise Exception('Client not found') from None
+
+        except RequestTokens.DoesNotExist as error:
+            raise Exception('Client not found') from None
+
+
+
+
+    def __get_current_client(self, model, key_value):
+        return model.objects.get(**key_value)

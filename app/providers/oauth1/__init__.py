@@ -1,38 +1,30 @@
 from oauthlib.oauth1 import Client, ResourceEndpoint
 from .provider import server as provider, validator
+from .request_token import create_request_tokens
 from ..auth_interface import AuthInterface
 from ..auth_common import validate_credentials
-from ...models import Users, Clients
+from ...models import Users
 from ...utils import generate_salt, update_or_create
 
 class Oauth1(AuthInterface):
     def authorize(self, uri, credentials):
         user = validate_credentials(credentials)
-        
-        user_object = {
-            'user': user.pk
-        }
+        request_token = create_request_tokens(uri, user)
 
-        client_object = {
-            'client_key': generate_salt(),
-            'client_secret': generate_salt(30),
-            'redirect_uri': uri,
-            **user_object
-        }
+        client = Client(
+            request_token['client_key'], 
+            client_secret=request_token['client_secret'], 
+            resource_owner_key=request_token['oauth_token'], 
+            resource_owner_secret=request_token['oauth_token_secret'], 
+            verifier=request_token['verifier']
+        )
+        uri, headers, body = client.sign(f"{request_token['redirect_uri']}/access_token")
 
-        client = update_or_create(Clients, user_object, client_object)
+        headers, boby, status = provider.create_access_token_response(uri, http_method='POST', body=body, headers=headers)
+        print(boby)
 
-        client_key = client.client_key
-        client_secret = client.client_secret
-        default_url = client.redirect_uri
-
-        oauth_client = Client(client_key, client_secret=client_secret, callback_uri=f'{default_url}/callback')
-        uri, headers, body = oauth_client.sign(f'{default_url}/request_token')
-        headers, body, status = provider.create_request_token_response(uri, body=body, headers=headers)
-
-        ## Decodificar los tokens
-
-        # Guardar en base de datos el client key y el client secret generados
+        # oauth_token = b['oauth_token'][0]
+        # oauth_token_secret = b['oauth_token_secret'][0]
 
         #Request tokens
 
