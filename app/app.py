@@ -10,7 +10,7 @@ class App():
 
         auth = AuthProvider()
         auth = auth.provider
-        print(auth.authorize('https://tcw', ('caceres.vc95@gmail.com', '123456')))
+        print(auth.validate_resource('EgTP82Ylt9Fnp3D6g6PLuIU8QTwWEn', ['get_currency', 'save_currency']))
 
 
         # init_server = Server()

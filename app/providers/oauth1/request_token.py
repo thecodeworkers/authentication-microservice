@@ -1,4 +1,4 @@
-from oauthlib.oauth1 import Client
+from oauthlib.oauth1 import Client, SIGNATURE_PLAINTEXT
 from urllib.parse import parse_qsl
 from .provider import server as provider
 from ...models import Clients, RequestTokens
@@ -20,7 +20,7 @@ def create_request_tokens(uri, user):
 
     default_url = client.redirect_uri
 
-    oauth_client = Client(client.client_key, client_secret=client.client_secret, callback_uri=f'{default_url}/callback')
+    oauth_client = Client(client.client_key, client_secret=client.client_secret, callback_uri=f'{default_url}/callback', signature_method=SIGNATURE_PLAINTEXT)
     uri, headers, body = oauth_client.sign(f'{default_url}/request_token')
     headers, body, status = provider.create_request_token_response(uri, body=body, headers=headers)
 

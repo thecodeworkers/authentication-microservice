@@ -1,37 +1,37 @@
 from oauthlib.oauth1 import Client, ResourceEndpoint
 from .provider import server as provider, validator
 from .request_token import create_request_tokens
+from .access_token import create_access_token
 from ..auth_interface import AuthInterface
 from ..auth_common import validate_credentials
-from ...models import Users
+from ...models import Users, AccessTokens
 from ...utils import generate_salt, update_or_create
 
 class Oauth1(AuthInterface):
     def authorize(self, uri, credentials):
         user = validate_credentials(credentials)
         request_token = create_request_tokens(uri, user)
+        access_token = create_access_token(request_token)
 
-        client = Client(
-            request_token['client_key'], 
-            client_secret=request_token['client_secret'], 
-            resource_owner_key=request_token['oauth_token'], 
-            resource_owner_secret=request_token['oauth_token_secret'], 
-            verifier=request_token['verifier']
-        )
-        uri, headers, body = client.sign(f"{request_token['redirect_uri']}/access_token")
+        return access_token['oauth_token']
 
-        headers, boby, status = provider.create_access_token_response(uri, http_method='POST', body=body, headers=headers)
-        print(boby)
+    def validate_resource(self, access_token, scopes=[]):
+        try:
+            access_token_instance = AccessTokens.objects.get(access_token=access_token)
+            client_instance = access_token_instance.client
 
-        # oauth_token = b['oauth_token'][0]
-        # oauth_token_secret = b['oauth_token_secret'][0]
+            client = Client(
+                client_instance.client_key, 
+                client_secret=client_instance.client_secret,
+                resource_owner_key=access_token,
+                resource_owner_secret=access_token_instance.access_token_secret
+            )
+            uri, headers, body = client.sign(f'{client_instance.redirect_uri}/protected_resource')
 
-        #Request tokens
+            current_provider = ResourceEndpoint(validator)
+            validate, request = provider.validate_protected_resource_request(uri, body=body, headers=headers, realms=scopes)
 
-        #Authorized Tokens
+            return validate
 
-        return 'authorize oauth1'
-
-    def validate_resource(self, access_token, scope):
-        # Aqui solo recibo el access token, debo buscar en la base de datos y obtener tooodos los tokens necesarios para validar al usuario
-        pass
+        except AccessTokens.DoesNotExist as error:
+            raise Exception('Client not found') from None
