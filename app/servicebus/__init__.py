@@ -3,6 +3,7 @@ from ..constants import SERVICEBUS_HOST
 from ..utils import contains
 import uuid
 import json
+import ast
 
 class ServiceBus():
     def __init__(self):
@@ -70,7 +71,7 @@ class ServiceBus():
 
     def __on_request(self, ch, method, props, body):
         request = contains(self.__queues, lambda queue: queue['queue_name'] == method.routing_key)
-        request = request['emitter']() if request != None else None
+        request = request['emitter'](self.__transform_body(body)) if request != None else None
 
         self.__publish_channel(ch, props.reply_to, props.correlation_id, request)
         ch.basic_ack(delivery_tag=method.delivery_tag)
@@ -101,3 +102,9 @@ class ServiceBus():
             ),
             body=json.dumps(body)
         )
+
+    def __transform_body(self, data):
+        dict_str = data.decode('UTF-8')
+        final_data = ast.literal_eval(dict_str)
+
+        return final_data

@@ -15,7 +15,7 @@ class Oauth1(AuthInterface):
 
         return access_token['oauth_token']
 
-    def validate_resource(self, access_token, scopes=[]):
+    def validate_resource(self, access_token, scopes=''):
         try:
             access_token_instance = AccessTokens.objects.get(access_token=access_token)
             client_instance = access_token_instance.client
@@ -29,7 +29,7 @@ class Oauth1(AuthInterface):
             uri, headers, body = client.sign(f'{client_instance.redirect_uri}/protected_resource')
 
             current_provider = ResourceEndpoint(validator)
-            validate, request = provider.validate_protected_resource_request(uri, body=body, headers=headers, realms=scopes)
+            validate, request = provider.validate_protected_resource_request(uri, body=body, headers=headers, realms=[scopes])
 
             return validate
 
