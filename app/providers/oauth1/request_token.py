@@ -4,9 +4,9 @@ from .provider import server as provider
 from ...models import Clients, RequestTokens
 from ...utils import generate_salt, update_or_create
 
-def create_request_tokens(uri, user):
+def create_request_tokens(uri, auth):
     user_object = {
-        'user': user.pk
+        'auth': auth.pk
     }
 
     client_object = {

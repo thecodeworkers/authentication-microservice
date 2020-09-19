@@ -1,0 +1,32 @@
+syntax = "proto2";
+
+message AuthObject {
+  required string email = 1;
+  optional string username = 2;
+}
+
+message SignupRequest {
+  required string email = 1;
+  optional string username = 2;
+  required string password = 3;
+  required string role = 4;
+}
+
+message SigninRequest {
+    optional string username = 1; // email or username
+    required string password = 2;
+  }
+
+message SignupResponse {
+  required AuthObject auth = 1;
+}
+
+message SigninResponse {
+    required AuthObject auth = 1;
+    required string authToken = 2;
+}
+
+service Auth {
+  rpc signup (SignupRequest) returns (SignupResponse);
+  rpc signin (SigninRequest) returns (SigninResponse);
+}

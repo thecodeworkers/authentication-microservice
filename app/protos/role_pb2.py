@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto2',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x1c\x61pp/services/role/role.proto\"\x0b\n\tRoleEmpty\"\x1b\n\rRoleIdRequest\x12\n\n\x02id\x18\x01 \x02(\t\".\n\x10RoleNotIdRequest\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x0c\n\x04\x63ode\x18\x02 \x02(\t\"5\n\x0bRoleRequest\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x0c\n\x04\x63ode\x18\x03 \x02(\t\"F\n\x10RoleTableRequest\x12\x0c\n\x04page\x18\x01 \x02(\x05\x12\x14\n\x08per_page\x18\x02 \x01(\x05:\x02\x31\x35\x12\x0e\n\x06search\x18\x03 \x01(\t\"*\n\x0cRoleResponse\x12\x1a\n\x04role\x18\x01 \x02(\x0b\x32\x0c.RoleRequest\"2\n\x14RoleMultipleResponse\x12\x1a\n\x04role\x18\x01 \x03(\x0b\x32\x0c.RoleRequest\"x\n\x11RoleTableResponse\x12\x1b\n\x05items\x18\x01 \x03(\x0b\x32\x0c.RoleRequest\x12\x0c\n\x04page\x18\x02 \x02(\x05\x12\x10\n\x08per_page\x18\x03 \x02(\x05\x12\x13\n\x0btotal_items\x18\x04 \x02(\x05\x12\x11\n\tnum_pages\x18\x05 \x02(\x05\x32\x84\x02\n\x04Role\x12.\n\x05table\x12\x11.RoleTableRequest\x1a\x12.RoleTableResponse\x12,\n\x07get_all\x12\n.RoleEmpty\x1a\x15.RoleMultipleResponse\x12$\n\x03get\x12\x0e.RoleIdRequest\x1a\r.RoleResponse\x12(\n\x04save\x12\x11.RoleNotIdRequest\x1a\r.RoleResponse\x12%\n\x06update\x12\x0c.RoleRequest\x1a\r.RoleResponse\x12\'\n\x06\x64\x65lete\x12\x0e.RoleIdRequest\x1a\r.RoleResponse'
+  serialized_pb=b'\n\x1c\x61pp/services/role/role.proto\"\x0b\n\tRoleEmpty\"\x1b\n\rRoleIdRequest\x12\n\n\x02id\x18\x01 \x02(\t\">\n\x10RoleNotIdRequest\x12\x0c\n\x04name\x18\x01 \x02(\t\x12\x0c\n\x04\x63ode\x18\x02 \x02(\t\x12\x0e\n\x06scopes\x18\x03 \x03(\t\"E\n\x0bRoleRequest\x12\n\n\x02id\x18\x01 \x02(\t\x12\x0c\n\x04name\x18\x02 \x02(\t\x12\x0c\n\x04\x63ode\x18\x03 \x02(\t\x12\x0e\n\x06scopes\x18\x04 \x03(\t\"F\n\x10RoleTableRequest\x12\x0c\n\x04page\x18\x01 \x02(\x05\x12\x14\n\x08per_page\x18\x02 \x01(\x05:\x02\x31\x35\x12\x0e\n\x06search\x18\x03 \x01(\t\"*\n\x0cRoleResponse\x12\x1a\n\x04role\x18\x01 \x02(\x0b\x32\x0c.RoleRequest\"2\n\x14RoleMultipleResponse\x12\x1a\n\x04role\x18\x01 \x03(\x0b\x32\x0c.RoleRequest\"x\n\x11RoleTableResponse\x12\x1b\n\x05items\x18\x01 \x03(\x0b\x32\x0c.RoleRequest\x12\x0c\n\x04page\x18\x02 \x02(\x05\x12\x10\n\x08per_page\x18\x03 \x02(\x05\x12\x13\n\x0btotal_items\x18\x04 \x02(\x05\x12\x11\n\tnum_pages\x18\x05 \x02(\x05\x32\x84\x02\n\x04Role\x12.\n\x05table\x12\x11.RoleTableRequest\x1a\x12.RoleTableResponse\x12,\n\x07get_all\x12\n.RoleEmpty\x1a\x15.RoleMultipleResponse\x12$\n\x03get\x12\x0e.RoleIdRequest\x1a\r.RoleResponse\x12(\n\x04save\x12\x11.RoleNotIdRequest\x1a\r.RoleResponse\x12%\n\x06update\x12\x0c.RoleRequest\x1a\r.RoleResponse\x12\'\n\x06\x64\x65lete\x12\x0e.RoleIdRequest\x1a\r.RoleResponse'
 )
 
 
@@ -104,6 +104,13 @@ _ROLENOTIDREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='scopes', full_name='RoleNotIdRequest.scopes', index=2,
+      number=3, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -117,7 +124,7 @@ _ROLENOTIDREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=74,
-  serialized_end=120,
+  serialized_end=136,
 )
 
 
@@ -150,6 +157,13 @@ _ROLEREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='scopes', full_name='RoleRequest.scopes', index=3,
+      number=4, type=9, cpp_type=9, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -162,8 +176,8 @@ _ROLEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=122,
-  serialized_end=175,
+  serialized_start=138,
+  serialized_end=207,
 )
 
 
@@ -208,8 +222,8 @@ _ROLETABLEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=177,
-  serialized_end=247,
+  serialized_start=209,
+  serialized_end=279,
 )
 
 
@@ -240,8 +254,8 @@ _ROLERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=249,
-  serialized_end=291,
+  serialized_start=281,
+  serialized_end=323,
 )
 
 
@@ -272,8 +286,8 @@ _ROLEMULTIPLERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=293,
-  serialized_end=343,
+  serialized_start=325,
+  serialized_end=375,
 )
 
 
@@ -332,8 +346,8 @@ _ROLETABLERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=345,
-  serialized_end=465,
+  serialized_start=377,
+  serialized_end=497,
 )
 
 _ROLERESPONSE.fields_by_name['role'].message_type = _ROLEREQUEST
@@ -414,8 +428,8 @@ _ROLE = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=468,
-  serialized_end=728,
+  serialized_start=500,
+  serialized_end=760,
   methods=[
   _descriptor.MethodDescriptor(
     name='table',

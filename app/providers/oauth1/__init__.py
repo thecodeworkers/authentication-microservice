@@ -3,14 +3,12 @@ from .provider import server as provider, validator
 from .request_token import create_request_tokens
 from .access_token import create_access_token
 from ..auth_interface import AuthInterface
-from ..auth_common import validate_credentials
-from ...models import Users, AccessTokens
+from ...models import AccessTokens
 from ...utils import generate_salt, update_or_create
 
 class Oauth1(AuthInterface):
-    def authorize(self, uri, credentials):
-        user = validate_credentials(credentials)
-        request_token = create_request_tokens(uri, user)
+    def authorize(self, auth, uri='https://tcw.com'):
+        request_token = create_request_tokens(uri, auth)
         access_token = create_access_token(request_token)
 
         return access_token['oauth_token']

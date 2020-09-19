@@ -76,7 +76,7 @@ class Oauth1RequestValidator(RequestValidator):
     def get_realms(self, token, request):
         try:
             request_token = self.__get_current_client(RequestTokens, {'request_token': token})
-            role = request_token.client.user.role
+            role = request_token.client.auth.role
 
             return role.scopes
 
@@ -100,7 +100,7 @@ class Oauth1RequestValidator(RequestValidator):
     def validate_realms(self, client_key, token, request, uri=None, realms=None):
         try:
             client = Clients.objects.get(client_key=client_key)
-            scopes = client.user.role.scopes
+            scopes = client.auth.role.scopes
 
             return all(item in scopes for item in realms)
 

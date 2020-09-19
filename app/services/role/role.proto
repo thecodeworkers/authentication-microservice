@@ -9,12 +9,14 @@ message RoleIdRequest {
 message RoleNotIdRequest {
   required string name = 1;
   required string code = 2;
+  repeated string scopes = 3;
 }
 
 message RoleRequest {
   required string id = 1;
   required string name = 2;
   required string code = 3;
+  repeated string scopes = 4;
 }
 
 message RoleTableRequest {
