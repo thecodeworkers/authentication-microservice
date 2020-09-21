@@ -13,9 +13,9 @@ message SignupRequest {
 }
 
 message SigninRequest {
-    optional string username = 1; // email or username
-    required string password = 2;
-  }
+  optional string username = 1; // email or username
+  required string password = 2;
+}
 
 message SignupResponse {
   required AuthObject auth = 1;
