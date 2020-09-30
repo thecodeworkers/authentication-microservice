@@ -45,7 +45,25 @@ def role_seeder():
                 '04_american_banks_get',
                 '04_american_banks_save',
                 '04_american_banks_update',
-                '04_american_banks_delete'
+                '04_american_banks_delete',
+                '04_european_banks_table',
+                '04_european_banks_get_all',
+                '04_european_banks_get',
+                '04_european_banks_save',
+                '04_european_banks_update',
+                '04_european_banks_delete',
+                '04_latin_american_banks_table',
+                '04_latin_american_banks_get_all',
+                '04_latin_american_banks_get',
+                '04_latin_american_banks_save',
+                '04_latin_american_banks_update',
+                '04_latin_american_banks_delete',
+                '04_credit_cards_table',
+                '04_credit_cards_get_all',
+                '04_credit_cards_get',
+                '04_credit_cards_save',
+                '04_credit_cards_update',
+                '04_credit_cards_delete'
             ]
         },
         {
