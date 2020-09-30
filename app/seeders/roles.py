@@ -10,6 +10,12 @@ def role_seeder():
             'name': 'admin',
             'code': '000',
             'scopes': [
+                '00_role_table',
+                '00_role_get_all',
+                '00_role_get',
+                '00_role_save',
+                '00_role_update',
+                '00_role_delete',
                 '01_currency_table',
                 '01_currency_get_all',
                 '01_currency_get',
