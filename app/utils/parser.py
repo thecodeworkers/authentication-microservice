@@ -10,6 +10,10 @@ def parser_one_object(model):
     parser = __iterate_object(parser)
     return dict(parser)
 
+def parser_context(context, key):
+    metadata = dict(context.invocation_metadata())
+    return metadata[key] if key in metadata else None
+
 def __commonParser(model):
     model_parser = model.to_json()
     model_parser = loads(model_parser)
