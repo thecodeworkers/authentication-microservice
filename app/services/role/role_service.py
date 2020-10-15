@@ -10,15 +10,17 @@ class RoleService(RoleServicer):
     def table(self, request, context):
         auth_token = parser_context(context, 'auth_token')
         is_auth(auth_token, '00_role_table')
+
         roles = Roles.objects
         response = paginate(roles, request.page)
         response = RoleTableResponse(**response)
-        
+
         return response
 
     def get_all(self, request, context):
         auth_token = parser_context(context, 'auth_token')
         is_auth(auth_token, '00_role_get_all')
+
         roles = parser_all_object(Roles.objects.all())
         response = RoleMultipleResponse(role=roles)
 
@@ -28,6 +30,7 @@ class RoleService(RoleServicer):
         try:
             auth_token = parser_context(context, 'auth_token')
             is_auth(auth_token, '00_role_get')
+
             role = Roles.objects.get(id=request.id)
             role = parser_one_object(role)
             response = RoleResponse(role=role)
@@ -41,6 +44,7 @@ class RoleService(RoleServicer):
         try:
             auth_token = parser_context(context, 'auth_token')
             is_auth(auth_token, '00_role_save')
+
             role_object = MessageToDict(request)
             role = Roles(**role_object).save()
             role = parser_one_object(role)
@@ -55,6 +59,7 @@ class RoleService(RoleServicer):
         try:
             auth_token = parser_context(context, 'auth_token')
             is_auth(auth_token, '00_role_update')
+
             role_object = MessageToDict(request)
             role = Roles.objects(id=role_object['id'])
 
@@ -63,16 +68,17 @@ class RoleService(RoleServicer):
             role = Roles(**role_object).save()
             role = parser_one_object(role)
             response = RoleResponse(role=role)
-        
+
             return response
 
         except NotUniqueError as e:
             exist_code(context, e)
-        
+
     def delete(self, request, context):
         try:
             auth_token = parser_context(context, 'auth_token')
             is_auth(auth_token, '00_role_delete')
+
             role = Roles.objects.get(id=request.id)
             role = role.delete()
             response = RoleEmpty()

@@ -19,7 +19,7 @@ class Oauth1(AuthInterface):
             client_instance = access_token_instance.client
 
             client = Client(
-                client_instance.client_key, 
+                client_instance.client_key,
                 client_secret=client_instance.client_secret,
                 resource_owner_key=access_token,
                 resource_owner_secret=access_token_instance.access_token_secret
@@ -29,7 +29,7 @@ class Oauth1(AuthInterface):
             current_provider = ResourceEndpoint(validator)
             validate, request = provider.validate_protected_resource_request(uri, body=body, headers=headers, realms=[scopes])
 
-            return validate
+            return client_instance.auth.id if validate else ''
 
         except AccessTokens.DoesNotExist as error:
             raise Exception('Client not found') from None
