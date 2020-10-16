@@ -12,7 +12,7 @@ def parser_one_object(model):
 
 def parser_context(context, key):
     metadata = dict(context.invocation_metadata())
-    return metadata[key] if key in metadata else None
+    return metadata[key] if key in metadata else ''
 
 def __commonParser(model):
     model_parser = model.to_json()
