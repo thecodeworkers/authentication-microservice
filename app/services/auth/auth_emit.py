@@ -16,7 +16,7 @@ class AuthEmitter():
             return is_auth
 
         except Exception as error:
-            return str(error)
+            return ''
 
     def __start_emitters(self):
         self.emit_validate_session()
