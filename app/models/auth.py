@@ -3,9 +3,9 @@ from bson import json_util
 from .roles import Roles
 
 class Auth(Document):
-    email = StringField(max_length=150, required=True, unique=True)
+    email = StringField(min_length=5,max_length=150, required=True, unique=True)
     username = StringField(max_length=150, required=False, unique=True)
-    password = StringField(max_length=400, required=True)
+    password = StringField(min_length=5,max_length=400, required=True)
     email_verification = DateTimeField()
     role = ReferenceField(Roles, required=True)
 

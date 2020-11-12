@@ -13,6 +13,9 @@ class AuthService(AuthServicer):
             role = Roles.objects.get(code=information['role'])
 
             information['role'] = role
+            if not information['password']:
+                raise Exception('Password is empty')
+            
             information['password'] = hash_password(information['password'])
 
             auth = Auth(**information).save()

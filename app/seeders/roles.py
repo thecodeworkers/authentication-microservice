@@ -69,7 +69,27 @@ def role_seeder():
                 '04_credit_cards_get',
                 '04_credit_cards_save',
                 '04_credit_cards_update',
-                '04_credit_cards_delete'
+                '04_credit_cards_delete',
+                '05_business_setting_table',
+                '05_business_setting_get_all',
+                '05_business_setting_get',
+                '05_business_setting_save',
+                '05_business_setting_update',
+                '05_business_setting_delete',
+                '05_general_setting_table',
+                '05_general_setting_get_all',
+                '05_general_setting_get',
+                '05_general_setting_save',
+                '05_general_setting_update',
+                '05_general_setting_delete',
+                '05_session_table',
+                '05_session_get_all',
+                '05_session_get',
+                '05_session_save',
+                '05_session_update',
+                '05_session_delete',
+                
+                
             ]
         },
         {
