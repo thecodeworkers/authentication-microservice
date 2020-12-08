@@ -1,9 +1,10 @@
 from pika import BlockingConnection, ConnectionParameters, BasicProperties
-from ..constants import SERVICEBUS_HOST
+from ..constants import SERVICEBUS_HOST, SERVICEBUS_TIMEOUT
 from ..utils import contains
 import uuid
 import json
 import ast
+import time
 
 class ServiceBus():
     def __init__(self):
@@ -30,8 +31,15 @@ class ServiceBus():
         self.corr_id = str(uuid.uuid4())
 
         self.__publish_channel(self.__channel, self.__channel_name, self.corr_id, send, self.callback_queue)
-        
+
+        timeout = time.time() + 60 * SERVICEBUS_TIMEOUT
+
         while self.response is None:
+            time.sleep(1)
+
+            if time.time() > timeout:
+                self.__connection.close()
+
             self.__connection.process_data_events()
 
         return self.response
@@ -96,7 +104,7 @@ class ServiceBus():
             exchange='',
             routing_key=routing_key,
             properties=BasicProperties(
-                reply_to=reply_to, 
+                reply_to=reply_to,
                 correlation_id=correlation_id,
                 content_type='application/json'
             ),
