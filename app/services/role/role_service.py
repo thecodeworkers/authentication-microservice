@@ -4,7 +4,9 @@ from ...protos import RoleServicer, RoleMultipleResponse, RoleResponse, RoleTabl
 from ...utils import parser_all_object, parser_one_object, not_exist_code, exist_code, paginate, parser_context
 from ...utils.validate_session import is_auth
 from ...models import Roles, Auth
+from bson.objectid import ObjectId
 from ..bootstrap import grpc_server
+
 
 class RoleService(RoleServicer):
     def table(self, request, context):
@@ -12,6 +14,17 @@ class RoleService(RoleServicer):
         is_auth(auth_token, '00_role_table')
 
         roles = Roles.objects
+
+        if request.search:
+            roles = Roles.objects(__raw__={'$or': [
+                {'name': request.search},
+                {'code':  request.search},
+                {'description': request.search},
+                {'scopes': {'$all': [request.search]}},
+                {'_id': ObjectId(request.search) if ObjectId.is_valid(
+                    request.search) else request.search}
+            ]})
+
         response = paginate(roles, request.page)
         response = RoleTableResponse(**response)
 
@@ -63,7 +76,8 @@ class RoleService(RoleServicer):
             role_object = MessageToDict(request)
             role = Roles.objects(id=role_object['id'])
 
-            if not role: del role_object['id']
+            if not role:
+                del role_object['id']
 
             role = Roles(**role_object).save()
             role = parser_one_object(role)
@@ -81,7 +95,8 @@ class RoleService(RoleServicer):
 
             user = Auth.objects(role=request.id)
 
-            if len(user) > 0: raise Exception('role_assigned')
+            if len(user) > 0:
+                raise Exception('role_assigned')
 
             role = Roles.objects.get(id=request.id)
             role = role.delete()
@@ -91,6 +106,7 @@ class RoleService(RoleServicer):
 
         except Roles.DoesNotExist as e:
             not_exist_code(context, e)
+
 
 def start_role_service():
     add_RoleServicer_to_server(RoleService(), grpc_server)
