@@ -1,7 +1,7 @@
 from google.protobuf.json_format import MessageToDict
 from mongoengine.queryset import NotUniqueError
 from ...protos import RoleServicer, RoleMultipleResponse, RoleResponse, RoleTableResponse, RoleEmpty, add_RoleServicer_to_server
-from ...utils import parser_all_object, parser_one_object, not_exist_code, exist_code, paginate, parser_context
+from ...utils import parser_all_object, parser_one_object, not_exist_code, exist_code, paginate, parser_context, pagination, default_paginate_schema
 from ...utils.validate_session import is_auth
 from ...models import Roles, Auth
 from bson.objectid import ObjectId
@@ -15,18 +15,38 @@ class RoleService(RoleServicer):
 
         roles = Roles.objects
 
-        if request.search:
-            roles = Roles.objects(__raw__={'$or': [
-                {'name': request.search},
-                {'code':  request.search},
-                {'description': request.search},
-                {'scopes': {'$all': [request.search]}},
-                {'_id': ObjectId(request.search) if ObjectId.is_valid(
-                    request.search) else request.search}
-            ]})
+        search = request.search
 
-        response = paginate(roles, request.page)
-        response = RoleTableResponse(**response)
+        pipeline = [
+            {
+                "$match": {
+                    "$or": [
+                        {"name": {"$regex": search, "$options": "i"}},
+                        {"code": {"$regex": search, "$options": "i"}},
+                    ]
+                }
+            },
+            {
+                "$group": {
+                    "_id": "$_id",
+                    "id": {"$first": {"$toString": "$_id"}},
+                    "name": {"$first": "$name"},
+                    "code": {"$first": "$code"},
+                    "scopes": {"$first": "$scopes"},
+                }
+            },
+            {
+                "$project": {
+                    "_id": 0
+                }
+            }
+        ]
+
+        pipeline = pipeline + pagination(request.page, request.per_page, {"name": 1})
+
+        response = Roles.objects().aggregate(pipeline)
+
+        response = RoleTableResponse(**default_paginate_schema(response, request.page, request.per_page))
 
         return response
 
