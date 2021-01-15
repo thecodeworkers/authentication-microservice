@@ -9,6 +9,16 @@ class Auth(Document):
     email_verification = DateTimeField()
     role = ReferenceField(Roles, required=True)
 
+    meta = {
+        'index_opts': {
+            'partialFilterExpression': {
+                'username': {
+                    '$exists': True
+                }
+            }
+        }
+    }
+
     def to_json(self):
         data = self.to_mongo()
 
