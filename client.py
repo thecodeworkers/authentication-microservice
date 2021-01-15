@@ -14,14 +14,21 @@ try:
     # )
 
     ## Register user with profile
+    # request = auth_pb2.SignupRequest(
+    #     email="testuser2@mail.com",
+    #     password="12345678",
+    #     role="001",
+    #     profile={
+    #         "name": "Test",
+    #         "lastname": "User"
+    #     }
+    # )
+
     request = auth_pb2.SignupRequest(
-        email="testuser2@mail.com",
+        email="testuser3@mail.com",
         password="12345678",
         role="001",
-        profile={
-            "name": "Test",
-            "lastname": "User"
-        }
+        profile={}
     )
 
     response = stub.signup(request)
