@@ -1,8 +1,14 @@
 syntax = "proto2";
 
+message ProfileObject {
+    optional string name = 1;
+    optional string lastname = 2;
+}
+
 message AuthObject {
   required string email = 1;
   optional string username = 2;
+  required ProfileObject profile = 3;
 }
 
 message SignupRequest {
@@ -10,6 +16,7 @@ message SignupRequest {
   optional string username = 2;
   required string password = 3;
   required string role = 4;
+  optional ProfileObject profile = 5;
 }
 
 message SigninRequest {

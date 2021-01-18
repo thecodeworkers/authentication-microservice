@@ -3,3 +3,4 @@ venv/
 .env
 keys/
 *.pyc
+.DS_Store
