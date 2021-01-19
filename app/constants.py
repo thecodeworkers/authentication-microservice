@@ -17,3 +17,9 @@ HOST = os.getenv('HOST', '[::]:50050')
 
 SERVICEBUS_HOST = os.getenv('SERVICEBUS_HOST', 'localhost')
 SERVICEBUS_TIMEOUT = int(os.getenv('SERVICEBUS_TIMEOUT', 2))
+
+PROVIDER = os.getenv('PROVIDER', 'oauth1')
+
+JWT_SECRET = os.getenv('JWT_SECRET', 'JhbGciOiJIUzI1N0eXAiOiJKV1QiLC')
+JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
+JWT_LIFETIME = int(os.getenv('JWT_LIFETIME', 3600))

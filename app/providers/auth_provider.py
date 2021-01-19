@@ -1,10 +1,11 @@
 from ..utils import dynamic_import
+from ..constants import PROVIDER
 
 class AuthProvider():
     _provider_name = ''
     provider = None
 
-    def __init__(self, provider='oauth1'):
+    def __init__(self, provider=PROVIDER):
         self._provider_name = provider
         self.__boot()
 

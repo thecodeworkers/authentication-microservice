@@ -4,8 +4,8 @@ from ...protos import RoleServicer, RoleMultipleResponse, RoleResponse, RoleTabl
 from ...utils import parser_all_object, parser_one_object, not_exist_code, exist_code, paginate, parser_context
 from ...utils.validate_session import is_auth
 from ...models import Roles, Auth
-from bson.objectid import ObjectId
 from ..bootstrap import grpc_server
+from bson.objectid import ObjectId
 
 
 class RoleService(RoleServicer):
