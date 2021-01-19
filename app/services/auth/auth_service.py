@@ -48,8 +48,8 @@ class AuthService(AuthServicer):
         except Roles.DoesNotExist as e:
             not_exist_code(context, e)
         except Exception as error:
-            auth_instance.delete()
-            raise Exception(profile)
+            if 'auth_instance' in locals(): auth_instance.delete()
+            raise Exception(error)
 
     def signin(self, request, context):
         try:
