@@ -7,7 +7,6 @@ from ...models import Roles, Auth
 from ..bootstrap import grpc_server
 from bson.objectid import ObjectId
 
-
 class RoleService(RoleServicer):
     def table(self, request, context):
         auth_token = parser_context(context, 'auth_token')
