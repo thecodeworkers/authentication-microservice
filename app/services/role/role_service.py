@@ -27,12 +27,8 @@ class RoleService(RoleServicer):
                 }
             },
             {
-                "$group": {
-                    "_id": "$_id",
-                    "id": {"$first": {"$toString": "$_id"}},
-                    "name": {"$first": "$name"},
-                    "code": {"$first": "$code"},
-                    "scopes": {"$first": "$scopes"},
+                "$set": {
+                    "id": {"$toString": "$_id"}
                 }
             },
             {
