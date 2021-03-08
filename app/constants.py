@@ -16,6 +16,7 @@ MAX_WORKERS = int(os.getenv('MAX_WORKERS', 5))
 HOST = os.getenv('HOST', '[::]:50050')
 
 SERVICEBUS_HOST = os.getenv('SERVICEBUS_HOST', 'localhost')
+SERVICEBUS_SECURE = os.getenv('SERVICEBUS_SECURE', False)
 SERVICEBUS_TIMEOUT = int(os.getenv('SERVICEBUS_TIMEOUT', 2))
 
 PROVIDER = os.getenv('PROVIDER', 'oauth1')

@@ -1,18 +1,36 @@
-from pika import BlockingConnection, ConnectionParameters, BasicProperties
-from ..constants import SERVICEBUS_HOST, SERVICEBUS_TIMEOUT
+from pika import BlockingConnection, ConnectionParameters, BasicProperties, SSLOptions
+from ..constants import SERVICEBUS_HOST, SERVICEBUS_TIMEOUT, SERVICEBUS_SECURE
 from ..utils import contains
 import uuid
 import json
 import ast
+import ssl
+import os
 import time
+
 
 class ServiceBus():
     def __init__(self):
         self.__channel = None
         self.__queues = []
 
+    def sign_ssl(self):
+        context = ssl.create_default_context(
+            cafile=os.path.dirname(__file__) + "/../certs/cacert.pem")
+        context.load_cert_chain(os.path.dirname(__file__)+"/../certs/cacert.pem",
+                                os.path.dirname(__file__)+"/../certs/caprivatekey.pem", 'vmware')
+        return SSLOptions(context, SERVICEBUS_HOST)
+
     def init_connection(self):
-        self.__connection = BlockingConnection(ConnectionParameters(host=SERVICEBUS_HOST))
+        if SERVICEBUS_SECURE:
+            ssl_options = self.sign_ssl()
+            self .__connection = BlockingConnection(
+                ConnectionParameters(port=5671, ssl_options=ssl_options, host=SERVICEBUS_HOST))
+            self.__channel = self.__connection.channel()
+            return
+
+        self.__connection = BlockingConnection(
+            ConnectionParameters(host=SERVICEBUS_HOST))
         self.__channel = self.__connection.channel()
 
     def add_queue(self, queue_name, emitter):
@@ -30,7 +48,8 @@ class ServiceBus():
         self.response = None
         self.corr_id = str(uuid.uuid4())
 
-        self.__publish_channel(self.__channel, self.__channel_name, self.corr_id, send, self.callback_queue)
+        self.__publish_channel(
+            self.__channel, self.__channel_name, self.corr_id, send, self.callback_queue)
 
         timeout = time.time() + 60 * SERVICEBUS_TIMEOUT
 
@@ -78,10 +97,13 @@ class ServiceBus():
             self.__consume_channel(callback_queue, self.__on_request)
 
     def __on_request(self, ch, method, props, body):
-        request = contains(self.__queues, lambda queue: queue['queue_name'] == method.routing_key)
-        request = request['emitter'](self.__transform_body(body)) if request != None else None
+        request = contains(
+            self.__queues, lambda queue: queue['queue_name'] == method.routing_key)
+        request = request['emitter'](
+            self.__transform_body(body)) if request != None else None
 
-        self.__publish_channel(ch, props.reply_to, props.correlation_id, request)
+        self.__publish_channel(
+            ch, props.reply_to, props.correlation_id, request)
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
     def __on_response(self, ch, method, props, body):
